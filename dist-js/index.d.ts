@@ -47,7 +47,7 @@ export interface NetworkConfig {
 export interface Duration {
     /** The number of whole seconds contained by this Duration. */
     secs: number;
-    /** The fractional part of this Duration, in nanoseconds. Must be greater or equal to 0 and smaller than 1e+9 (the max number of nanoseoncds in a second)*/
+    /** The fractional part of this Duration, in nanoseconds. Must be greater or equal to 0 and smaller than 1e+9 (the max number of nanoseoncds in a second) */
     nanos: number;
 }
 export declare class Location {

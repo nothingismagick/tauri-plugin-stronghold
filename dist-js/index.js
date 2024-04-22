@@ -186,7 +186,7 @@ class Store {
         }).then((v) => (v != null ? Uint8Array.from(v) : null));
     }
     async insert(key, value, lifetime) {
-        return await invoke("plugin:stronghold|save_store_record", {
+        await invoke("plugin:stronghold|save_store_record", {
             snapshotPath: this.path,
             client: this.client,
             key: toBytesDto(key),
@@ -226,7 +226,7 @@ class Vault extends ProcedureExecutor {
      * @returns
      */
     async insert(recordPath, secret) {
-        return await invoke("plugin:stronghold|save_secret", {
+        await invoke("plugin:stronghold|save_secret", {
             snapshotPath: this.path,
             client: this.client,
             vault: this.name,
@@ -241,7 +241,7 @@ class Vault extends ProcedureExecutor {
      * @returns
      */
     async remove(location) {
-        return await invoke("plugin:stronghold|remove_secret", {
+        await invoke("plugin:stronghold|remove_secret", {
             snapshotPath: this.path,
             client: this.client,
             vault: this.name,
@@ -277,7 +277,7 @@ class Stronghold {
      * Remove this instance from the cache.
      */
     async unload() {
-        return await invoke("plugin:stronghold|destroy", {
+        await invoke("plugin:stronghold|destroy", {
             snapshotPath: this.path,
         });
     }
@@ -298,7 +298,7 @@ class Stronghold {
      * @returns
      */
     async save() {
-        return await invoke("plugin:stronghold|save", {
+        await invoke("plugin:stronghold|save", {
             snapshotPath: this.path,
         });
     }
