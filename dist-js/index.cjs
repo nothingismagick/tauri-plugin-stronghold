@@ -185,7 +185,7 @@ class Store {
             snapshotPath: this.path,
             client: this.client,
             key: toBytesDto(key),
-        }).then((v) => (v != null ? Uint8Array.from(v) : null));
+        }).then((v) => v && Uint8Array.from(v));
     }
     async insert(key, value, lifetime) {
         await core.invoke("plugin:stronghold|save_store_record", {
@@ -201,7 +201,7 @@ class Store {
             snapshotPath: this.path,
             client: this.client,
             key: toBytesDto(key),
-        }).then((v) => (v != null ? Uint8Array.from(v) : null));
+        }).then((v) => v && Uint8Array.from(v));
     }
 }
 /**
