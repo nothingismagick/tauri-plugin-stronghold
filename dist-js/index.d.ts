@@ -1,4 +1,3 @@
-type BytesDto = string | number[];
 export type ClientPath = string | Iterable<number> | ArrayLike<number> | ArrayBuffer;
 export type VaultPath = string | Iterable<number> | ArrayLike<number> | ArrayBuffer;
 export type RecordPath = string | Iterable<number> | ArrayLike<number> | ArrayBuffer;
@@ -115,7 +114,7 @@ declare class ProcedureExecutor {
 }
 export declare class Client {
     path: string;
-    name: BytesDto;
+    name: ClientPath;
     constructor(path: string, name: ClientPath);
     /**
      * Get a vault by name.
@@ -128,8 +127,8 @@ export declare class Client {
 }
 export declare class Store {
     path: string;
-    client: BytesDto;
-    constructor(path: string, client: BytesDto);
+    client: ClientPath;
+    constructor(path: string, client: ClientPath);
     get(key: StoreKey): Promise<Uint8Array | null>;
     insert(key: StoreKey, value: number[], lifetime?: Duration): Promise<void>;
     remove(key: StoreKey): Promise<Uint8Array | null>;
@@ -142,9 +141,9 @@ export declare class Store {
 export declare class Vault extends ProcedureExecutor {
     /** The vault path. */
     path: string;
-    client: BytesDto;
+    client: ClientPath;
     /** The vault name. */
-    name: BytesDto;
+    name: VaultPath;
     constructor(path: string, client: ClientPath, name: VaultPath);
     /**
      * Insert a record to this vault.

@@ -3,12 +3,6 @@ import { invoke } from '@tauri-apps/api/core';
 // Copyright 2019-2023 Tauri Programme within The Commons Conservancy
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
-function toBytesDto(v) {
-    if (typeof v === "string") {
-        return v;
-    }
-    return Array.from(v instanceof ArrayBuffer ? new Uint8Array(v) : v);
-}
 class Location {
     constructor(type, payload) {
         this.type = type;
@@ -16,13 +10,13 @@ class Location {
     }
     static generic(vault, record) {
         return new Location("Generic", {
-            vault: toBytesDto(vault),
-            record: toBytesDto(record),
+            vault,
+            record,
         });
     }
     static counter(vault, counter) {
         return new Location("Counter", {
-            vault: toBytesDto(vault),
+            vault,
             counter,
         });
     }
@@ -158,7 +152,7 @@ class ProcedureExecutor {
 class Client {
     constructor(path, name) {
         this.path = path;
-        this.name = toBytesDto(name);
+        this.name = name;
     }
     /**
      * Get a vault by name.
@@ -167,7 +161,7 @@ class Client {
      * @returns
      */
     getVault(name) {
-        return new Vault(this.path, this.name, toBytesDto(name));
+        return new Vault(this.path, this.name, name);
     }
     getStore() {
         return new Store(this.path, this.name);
@@ -182,14 +176,14 @@ class Store {
         return await invoke("plugin:stronghold|get_store_record", {
             snapshotPath: this.path,
             client: this.client,
-            key: toBytesDto(key),
+            key,
         }).then((v) => v && Uint8Array.from(v));
     }
     async insert(key, value, lifetime) {
         await invoke("plugin:stronghold|save_store_record", {
             snapshotPath: this.path,
             client: this.client,
-            key: toBytesDto(key),
+            key,
             value,
             lifetime,
         });
@@ -198,7 +192,7 @@ class Store {
         return await invoke("plugin:stronghold|remove_store_record", {
             snapshotPath: this.path,
             client: this.client,
-            key: toBytesDto(key),
+            key,
         }).then((v) => v && Uint8Array.from(v));
     }
 }
@@ -215,8 +209,8 @@ class Vault extends ProcedureExecutor {
             vault: name,
         });
         this.path = path;
-        this.client = toBytesDto(client);
-        this.name = toBytesDto(name);
+        this.client = client;
+        this.name = name;
     }
     /**
      * Insert a record to this vault.
@@ -230,7 +224,7 @@ class Vault extends ProcedureExecutor {
             snapshotPath: this.path,
             client: this.client,
             vault: this.name,
-            recordPath: toBytesDto(recordPath),
+            recordPath,
             secret,
         });
     }
@@ -284,13 +278,13 @@ class Stronghold {
     async loadClient(client) {
         return await invoke("plugin:stronghold|load_client", {
             snapshotPath: this.path,
-            client: toBytesDto(client),
+            client,
         }).then(() => new Client(this.path, client));
     }
     async createClient(client) {
         return await invoke("plugin:stronghold|create_client", {
             snapshotPath: this.path,
-            client: toBytesDto(client),
+            client,
         }).then(() => new Client(this.path, client));
     }
     /**
