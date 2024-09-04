@@ -76,7 +76,7 @@ declare class ProcedureExecutor {
      * @param hint The record hint.
      * @returns
      */
-    deriveSLIP10(chain: number[], source: "Seed" | "Key", sourceLocation: Location, outputLocation: Location): Promise<Uint8Array>;
+    deriveSLIP10(chain: number[], source: 'Seed' | 'Key', sourceLocation: Location, outputLocation: Location): Promise<Uint8Array>;
     /**
      * Store a BIP39 mnemonic.
      * @param mnemonic The mnemonic string.

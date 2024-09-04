@@ -9,15 +9,15 @@ class Location {
         this.payload = payload;
     }
     static generic(vault, record) {
-        return new Location("Generic", {
+        return new Location('Generic', {
             vault,
-            record,
+            record
         });
     }
     static counter(vault, counter) {
-        return new Location("Counter", {
+        return new Location('Counter', {
             vault,
-            counter,
+            counter
         });
     }
 }
@@ -33,15 +33,15 @@ class ProcedureExecutor {
      * @returns
      */
     async generateSLIP10Seed(outputLocation, sizeBytes) {
-        return await invoke("plugin:stronghold|execute_procedure", {
+        return await invoke('plugin:stronghold|execute_procedure', {
             ...this.procedureArgs,
             procedure: {
-                type: "SLIP10Generate",
+                type: 'SLIP10Generate',
                 payload: {
                     output: outputLocation,
-                    sizeBytes,
-                },
-            },
+                    sizeBytes
+                }
+            }
         }).then((n) => Uint8Array.from(n));
     }
     /**
@@ -54,19 +54,19 @@ class ProcedureExecutor {
      * @returns
      */
     async deriveSLIP10(chain, source, sourceLocation, outputLocation) {
-        return await invoke("plugin:stronghold|execute_procedure", {
+        return await invoke('plugin:stronghold|execute_procedure', {
             ...this.procedureArgs,
             procedure: {
-                type: "SLIP10Derive",
+                type: 'SLIP10Derive',
                 payload: {
                     chain,
                     input: {
                         type: source,
-                        payload: sourceLocation,
+                        payload: sourceLocation
                     },
-                    output: outputLocation,
-                },
-            },
+                    output: outputLocation
+                }
+            }
         }).then((n) => Uint8Array.from(n));
     }
     /**
@@ -78,16 +78,16 @@ class ProcedureExecutor {
      * @returns
      */
     async recoverBIP39(mnemonic, outputLocation, passphrase) {
-        return await invoke("plugin:stronghold|execute_procedure", {
+        return await invoke('plugin:stronghold|execute_procedure', {
             ...this.procedureArgs,
             procedure: {
-                type: "BIP39Recover",
+                type: 'BIP39Recover',
                 payload: {
                     mnemonic,
                     passphrase,
-                    output: outputLocation,
-                },
-            },
+                    output: outputLocation
+                }
+            }
         }).then((n) => Uint8Array.from(n));
     }
     /**
@@ -98,15 +98,15 @@ class ProcedureExecutor {
      * @returns
      */
     async generateBIP39(outputLocation, passphrase) {
-        return await invoke("plugin:stronghold|execute_procedure", {
+        return await invoke('plugin:stronghold|execute_procedure', {
             ...this.procedureArgs,
             procedure: {
-                type: "BIP39Generate",
+                type: 'BIP39Generate',
                 payload: {
                     output: outputLocation,
-                    passphrase,
-                },
-            },
+                    passphrase
+                }
+            }
         }).then((n) => Uint8Array.from(n));
     }
     /**
@@ -117,15 +117,15 @@ class ProcedureExecutor {
      * @since 2.0.0
      */
     async getEd25519PublicKey(privateKeyLocation) {
-        return await invoke("plugin:stronghold|execute_procedure", {
+        return await invoke('plugin:stronghold|execute_procedure', {
             ...this.procedureArgs,
             procedure: {
-                type: "PublicKey",
+                type: 'PublicKey',
                 payload: {
-                    type: "Ed25519",
-                    privateKey: privateKeyLocation,
-                },
-            },
+                    type: 'Ed25519',
+                    privateKey: privateKeyLocation
+                }
+            }
         }).then((n) => Uint8Array.from(n));
     }
     /**
@@ -137,15 +137,15 @@ class ProcedureExecutor {
      * @since 2.0.0
      */
     async signEd25519(privateKeyLocation, msg) {
-        return await invoke("plugin:stronghold|execute_procedure", {
+        return await invoke('plugin:stronghold|execute_procedure', {
             ...this.procedureArgs,
             procedure: {
-                type: "Ed25519Sign",
+                type: 'Ed25519Sign',
                 payload: {
                     privateKey: privateKeyLocation,
-                    msg,
-                },
-            },
+                    msg
+                }
+            }
         }).then((n) => Uint8Array.from(n));
     }
 }
@@ -173,26 +173,26 @@ class Store {
         this.client = client;
     }
     async get(key) {
-        return await invoke("plugin:stronghold|get_store_record", {
+        return await invoke('plugin:stronghold|get_store_record', {
             snapshotPath: this.path,
             client: this.client,
-            key,
+            key
         }).then((v) => v && Uint8Array.from(v));
     }
     async insert(key, value, lifetime) {
-        await invoke("plugin:stronghold|save_store_record", {
+        await invoke('plugin:stronghold|save_store_record', {
             snapshotPath: this.path,
             client: this.client,
             key,
             value,
-            lifetime,
+            lifetime
         });
     }
     async remove(key) {
-        return await invoke("plugin:stronghold|remove_store_record", {
+        return await invoke('plugin:stronghold|remove_store_record', {
             snapshotPath: this.path,
             client: this.client,
-            key,
+            key
         }).then((v) => v && Uint8Array.from(v));
     }
 }
@@ -206,7 +206,7 @@ class Vault extends ProcedureExecutor {
         super({
             snapshotPath: path,
             client,
-            vault: name,
+            vault: name
         });
         this.path = path;
         this.client = client;
@@ -220,12 +220,12 @@ class Vault extends ProcedureExecutor {
      * @returns
      */
     async insert(recordPath, secret) {
-        await invoke("plugin:stronghold|save_secret", {
+        await invoke('plugin:stronghold|save_secret', {
             snapshotPath: this.path,
             client: this.client,
             vault: this.name,
             recordPath,
-            secret,
+            secret
         });
     }
     /**
@@ -235,11 +235,11 @@ class Vault extends ProcedureExecutor {
      * @returns
      */
     async remove(location) {
-        await invoke("plugin:stronghold|remove_secret", {
+        await invoke('plugin:stronghold|remove_secret', {
             snapshotPath: this.path,
             client: this.client,
             vault: this.name,
-            recordPath: location.payload.record,
+            recordPath: location.payload.record
         });
     }
 }
@@ -262,29 +262,29 @@ class Stronghold {
      * @returns
      */
     static async load(path, password) {
-        return await invoke("plugin:stronghold|initialize", {
+        return await invoke('plugin:stronghold|initialize', {
             snapshotPath: path,
-            password,
+            password
         }).then(() => new Stronghold(path));
     }
     /**
      * Remove this instance from the cache.
      */
     async unload() {
-        await invoke("plugin:stronghold|destroy", {
-            snapshotPath: this.path,
+        await invoke('plugin:stronghold|destroy', {
+            snapshotPath: this.path
         });
     }
     async loadClient(client) {
-        return await invoke("plugin:stronghold|load_client", {
+        return await invoke('plugin:stronghold|load_client', {
             snapshotPath: this.path,
-            client,
+            client
         }).then(() => new Client(this.path, client));
     }
     async createClient(client) {
-        return await invoke("plugin:stronghold|create_client", {
+        return await invoke('plugin:stronghold|create_client', {
             snapshotPath: this.path,
-            client,
+            client
         }).then(() => new Client(this.path, client));
     }
     /**
@@ -292,8 +292,8 @@ class Stronghold {
      * @returns
      */
     async save() {
-        await invoke("plugin:stronghold|save", {
-            snapshotPath: this.path,
+        await invoke('plugin:stronghold|save', {
+            snapshotPath: this.path
         });
     }
 }
